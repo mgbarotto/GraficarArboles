@@ -32,11 +32,10 @@ def alt_negra(p):
         p=p.padre
     return alt
             
-    
+  
 
-def azar(arb):
-    for i in range(100):
-        print ("Insertando ",i)
+def azar(arb, cant):
+    for i in range(cant):
         arb.insertar(randint(1,200))
 def borrazar(arb):
     for i in range(100):
@@ -48,6 +47,7 @@ def borrazar(arb):
 
 
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (5,25)#Posicion inicial de la ventana
+
 class Grafico:
     def __init__(self, W=800, H=600):
         self.screensize=[W,H]
@@ -57,11 +57,14 @@ class Grafico:
         self.offset=[0,0]
         self.separacion=4 #numero mas alto es menos separacion
         self.screen = None
+        self.ayuda=False
+        self.textoAyuda="H: Mostrar/Ocultar ayuda\nA: Insertar nodo\nR:Insertar x nodos al azar\nD: Borrar nodo\nIzq./Der.: Juntar/esparcir nodos\nMouse (arrastrar): mover arbol\nEspacio: Recentrar arbol\nESC: Salir"
     def graficar(self, arb):
         assert hasattr(arb, 'raiz'), "El tipo arbol debe tener un atributo llamado \'raiz\'"
         pygame.init()
         scrolling=False
         self.screen= pygame.display.set_mode(self.screensize,pygame.RESIZABLE)
+        pygame.display.set_caption("Grafico")
         self.dibujarArbol(arb)
         listo=False
         while not listo:
@@ -85,15 +88,16 @@ class Grafico:
                         if event.key==pygame.K_ESCAPE:
                             listo=True
                             
+                        elif event.key==pygame.K_h:
+                            self.ayuda=not self.ayuda
+                            
                         elif event.key==pygame.K_d:
-                            #Borrar numero al azar
-                            while arb.raiz and arb.raiz!=Nulo:
-                                n=arb.buscar(randint(1,200))
-                                if n: #Cuando encuentra un numero que esta en el arbol, o despues de demasiados intentos
-                                    break
+                            n=int(inputbox.ask(self.screen, 'Eliminar numero')) 
                             arb.borrar(n)
+                            
                         elif event.key==pygame.K_LEFT:
-                            self.separacion+=1
+                            if self.separacion<10:
+                                self.separacion+=1
                             
                         elif event.key==pygame.K_RIGHT:
                             if self.separacion>1:
@@ -101,16 +105,11 @@ class Grafico:
                         elif event.key==pygame.K_SPACE:
                             self.offset=[0,0]
                         elif event.key==pygame.K_a:
-                            #Agregar numero al azar sin repetir
-                            c=0
-                            while c<1000:
-                                c+=1
-                                n=randint(1,200)
-                                existe=arb.buscar(n)
-                                if not existe: #Cuando encuentra un numero que esta en el arbol, o despues de demasiados intentos
-                                    break
+                            n=int(inputbox.ask(self.screen, 'Insertar numero'))
                             arb.insertar(n)
-                            
+                        elif event.key==pygame.K_r:
+                            n=int(inputbox.ask(self.screen, 'Cant. de numeros a ingresar'))
+                            azar(arb,n)
                         self.dibujarArbol(arb)                   
         pygame.display.quit()
         pygame.quit()
@@ -120,6 +119,7 @@ class Grafico:
         if self.separacion==0: #Para evitar dividir por 0
             self.separacion=1
         self.dibujarNodo(arb.raiz, self.offset[0]+self.screensize[0]//2,self.offset[1]+self.y_origen,self.separacion)
+        self.mostrarAyuda()
         pygame.display.flip()
 
     def dibujarNodo(self, nodo, x, y, depth, origen=None):
@@ -147,4 +147,15 @@ class Grafico:
                 self.screen.blit(alt, (x+self.radio+alt.get_width()//2,y-dato.get_height()//2))
         self.dibujarNodo(nodo.izq, x-(self.screensize[0]/depth), y+self.delta_y,depth*2, (x,y+self.radio))
         self.dibujarNodo(nodo.der, x+(self.screensize[0]/depth), y+self.delta_y,depth*2, (x,y+self.radio))
+    def mostrarAyuda(self):
+        if(not self.ayuda):
+            ayuda=self.textoAyuda.split('\n')[0]
+        else:
+            ayuda=self.textoAyuda
+        font = pygame.font.Font(None, 15)
+        y=5
+        for linea in ayuda.split('\n'):
+            linea=font.render(str(linea),True, (255,255,255))
+            self.screen.blit(linea, (10,y+linea.get_height()//2))
+            y+=15
             

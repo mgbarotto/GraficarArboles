@@ -46,13 +46,12 @@ def ask(screen, question):
   display_box(screen, question + ": " + string.join(current_string,""))
   while 1:
     inkey = get_key()
+    if 256<=inkey<=265: inkey-=208
     if inkey == K_BACKSPACE:
       current_string = current_string[0:-1]
-    elif inkey == K_RETURN:
+    elif inkey == K_RETURN or inkey==271:
       break
-    elif inkey == K_MINUS:
-      current_string.append("_")
-    elif inkey <= 127:
+    elif 48<=inkey <= 57:
       current_string.append(chr(inkey))
     display_box(screen, question + ": " + string.join(current_string,""))
   return string.join(current_string,"")
