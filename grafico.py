@@ -51,7 +51,7 @@ os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (5,25)#Posicion inicial de la ven
 class Grafico:
     def __init__(self, W=800, H=600):
         self.screensize=[W,H]
-        self.radio=10
+        self.radio=13
         self.y_origen=100
         self.delta_y=100
         self.offset=[0,0]
@@ -92,8 +92,10 @@ class Grafico:
                             self.ayuda=not self.ayuda
                             
                         elif event.key==pygame.K_d:
-                            n=int(inputbox.ask(self.screen, 'Eliminar numero')) 
-                            arb.borrar(n)
+                            n=inputbox.ask(self.screen, 'Eliminar numero')
+                            if n:
+                                n=int(n)
+                                arb.borrar(n)
                             
                         elif event.key==pygame.K_LEFT:
                             if self.separacion<10:
@@ -105,11 +107,15 @@ class Grafico:
                         elif event.key==pygame.K_SPACE:
                             self.offset=[0,0]
                         elif event.key==pygame.K_a:
-                            n=int(inputbox.ask(self.screen, 'Insertar numero'))
-                            arb.insertar(n)
+                            n=inputbox.ask(self.screen, 'Insertar numero')
+                            if n:
+                                n=int(n)
+                                arb.insertar(n)
                         elif event.key==pygame.K_r:
-                            n=int(inputbox.ask(self.screen, 'Cant. de numeros a ingresar'))
-                            azar(arb,n)
+                            n=inputbox.ask(self.screen, 'Cant. de numeros a ingresar')
+                            if n:
+                                n=int(n)
+                                azar(arb,n)
                         self.dibujarArbol(arb)                   
         pygame.display.quit()
         pygame.quit()
@@ -134,7 +140,7 @@ class Grafico:
         if x<self.screensize[0]+self.radio and x>-self.radio and y>-self.radio:
             pygame.draw.circle(self.screen, (200,200,200), (x,y), self.radio)
             pygame.draw.circle(self.screen, color, (x,y), self.radio-1)
-            font = pygame.font.Font(None, 15)
+            font = pygame.font.SysFont("Arial", 12)
             dato = font.render(str(nodo.dato),True, (255,255,255))
             self.screen.blit(dato, (x-dato.get_width()//2,y-dato.get_height()//2))
             if isinstance(nodo, NodoRN):
@@ -152,7 +158,7 @@ class Grafico:
             ayuda=self.textoAyuda.split('\n')[0]
         else:
             ayuda=self.textoAyuda
-        font = pygame.font.Font(None, 15)
+        font = pygame.font.SysFont("Arial", 12)
         y=5
         for linea in ayuda.split('\n'):
             linea=font.render(str(linea),True, (255,255,255))

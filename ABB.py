@@ -90,10 +90,12 @@ class ABB(Arbol):
         else:
             y.der=z
     def borrar(self, z):
-        if not z: return
         """Borra un nodo del arbol
             Se deberia usar como borrar(buscar(valor))
         """
+        if not isinstance(z, self.claseNodo):
+            z=self.buscar(z)
+        if not z: return
         self.size-=1
         if not z.izq:
             self.transplantar(z,z.der)

@@ -1,11 +1,8 @@
 from ABB import *
-import pdb
+from grafico import *
 
 
-class NodoAVL(Nodo):
-    def __init__(self,d, p=None):
-        Nodo.__init__(self,d,p)
-        self.altura=-1
+
 
 class AVL(ABB):
 #--------------Constructor--------------

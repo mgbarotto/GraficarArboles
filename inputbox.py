@@ -12,7 +12,7 @@
 #
 # Only near the center of the screen is blitted to
 
-import pygame, pygame.font, pygame.event, pygame.draw, string
+import pygame, pygame.event, pygame.draw, string
 from pygame.locals import *
 
 def get_key():
@@ -25,7 +25,7 @@ def get_key():
 
 def display_box(screen, message):
   "Print a message in a box in the middle of the screen"
-  fontobject = pygame.font.Font(None,18)
+  fontobject = pygame.font.SysFont("Arial",13)
   pygame.draw.rect(screen, (0,0,0),
                    ((screen.get_width() / 2) - 100,
                     (screen.get_height() / 2) - 10,
